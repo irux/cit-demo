@@ -1,0 +1,17 @@
+version: "3.8"
+
+services: 
+  puppet:
+    container_name: puppet-master-container
+    stdin_open: true
+    tty: true
+    image: puppet/puppetserver
+    ports:
+      - "8140:8140"
+    hostname: puppet
+    
+  puppet-agent:
+    container_name: puppet-agent
+    stdin_open: true
+    tty: true
+    image:  puppet/puppet-agent-ubuntu
