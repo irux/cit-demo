@@ -1,0 +1,40 @@
+---
+- hosts:
+  - swarm_manager
+
+  tasks:
+
+  
+    - name: Uninstall Docker
+      apt:
+        name: ["docker-ce", "docker-ce-cli", "containerd.io","docker-engine","docker","docker.io"]
+        state: absent
+        purge: yes
+        autoremove: yes
+        autoclean: yes
+    
+
+    - name: Delete Docker lib config
+      file:
+        path: /var/lib/docker
+        state: absent
+
+    - name: Delete Docker etc config
+      file:
+        path: /etc/docker
+        state: absent
+    
+    - name: Remove Docker Repository apt
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable
+        state: absent
+
+    - name: Delete Docker key
+      apt_key:
+        id: 0EBFCD88
+        state: absent
+
+    - name: Delete docker SDK
+      pip:
+        name: docker
+        state: absent

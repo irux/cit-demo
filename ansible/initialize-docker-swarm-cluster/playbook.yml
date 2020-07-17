@@ -1,0 +1,9 @@
+---
+- hosts:
+  - swarm_manager
+
+  tasks:
+
+    - name: Init a new Swarm Cluster
+      docker_swarm:
+        state: present

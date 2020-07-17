@@ -1,0 +1,35 @@
+- hosts:
+  - swarm_manager
+
+  tasks:
+
+    - name: Download Docker GPG key
+      get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /tmp/dockerkey.gpg
+        validate_certs: no
+        headers:
+          Accept: '*/*'
+
+    - name: Add Docker key repo
+      apt_key:
+        file: /tmp/dockerkey.gpg
+        state: present
+
+
+    - name: Install repo Docker
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable
+        state: present
+
+
+    - name: Install Docker
+      apt:
+        name: ["docker-ce", "docker-ce-cli", "containerd.io"]
+        update_cache: yes
+        state: latest
+
+    - name: Install Docker SDK python
+      pip:
+        name: docker
+        state: present
