@@ -1,0 +1,22 @@
+FROM python:3.8.4-buster
+
+ARG manager
+RUN [ -z "$manager" ] && echo "manager is required." && exit 1 || true
+ARG workers
+RUN [ -z "$workers" ] && echo "workers is required. It is a comma separated list" && exit 1 || true
+
+
+ENV MANAGER=$manager
+ENV WORKERS=$workers
+
+RUN apt update
+RUN apt install -y software-properties-common ansible
+
+WORKDIR /ansible
+
+COPY ./Playbooks .
+COPY ./setup.sh .
+
+RUN chmod +x setup.sh && ./setup.sh
+
+CMD [ "bash" ]

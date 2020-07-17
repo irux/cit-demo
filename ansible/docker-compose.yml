@@ -1,0 +1,12 @@
+version: "3.8"
+
+services: 
+  ansible:
+    container_name: ansible-container
+    stdin_open: true
+    tty: true
+    build:
+      context: .
+      args:
+        manager: MY_IP_EXAMPLE_MANAGER
+        workers: MY_IP_EXAMPLE_WORKER,MY_IP_EXAMPLE_WORKER2
