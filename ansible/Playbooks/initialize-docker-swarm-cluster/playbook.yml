@@ -3,7 +3,36 @@
   - swarm_manager
 
   tasks:
-
     - name: Init a new Swarm Cluster
       docker_swarm:
         state: present
+      become: true
+
+    - name: Inspect Swarm Cluster
+      docker_swarm:
+        state: inspect
+      register: swarm_info
+      become: true
+    
+
+    - name: Setting Swarm Cluster Facts
+      set_fact:
+        swarm_cluster: "{{swarm_info}}"
+        swarm_manager_token: "{{swarm_info['swarm_facts']['JoinTokens']['Manager']}}"
+        swarm_worker_token: "{{swarm_info['swarm_facts']['JoinTokens']['Worker']}}"
+        swarm_adv_listener: "{{ansible_default_ipv4['address']}}:2377"
+      
+
+- hosts:
+  - swarm_workers
+
+  tasks:
+
+    - name: "Join Swarm Cluster Managet as a Worker"
+      become: true
+      docker_swarm:
+        state: join
+        advertise_addr: "{{ansible_default_ipv4['address']}}"
+        join_token: "{{hostvars[groups['swarm_manager'][0]]['swarm_worker_token']}}"
+        remote_addrs: ["{{hostvars[groups['swarm_manager'][0]]['swarm_adv_listener']}}"]
+      

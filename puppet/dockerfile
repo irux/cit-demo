@@ -1,0 +1,5 @@
+FROM puppet/puppet-agent-ubuntu:6.2.0
+
+
+
+ENTRYPOINT ["bash"]

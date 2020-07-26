@@ -9,9 +9,14 @@ services:
     ports:
       - "8140:8140"
     hostname: puppet
-    
+
   puppet-agent:
+    depends_on:
+      - puppet
     container_name: puppet-agent
     stdin_open: true
     tty: true
-    image:  puppet/puppet-agent-ubuntu
+    build:
+      context: .
+    hostname: puppetworker
+    
